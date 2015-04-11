@@ -48,3 +48,6 @@ Temporary Items
 /.idea/libraries
 .DS_Store
 /build
+/app/build
+/.gradle/2.2.1
+
