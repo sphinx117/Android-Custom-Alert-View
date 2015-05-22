@@ -49,5 +49,6 @@ Temporary Items
 .DS_Store
 /build
 /app/build
+/app/build/
 /.gradle/2.2.1
 
