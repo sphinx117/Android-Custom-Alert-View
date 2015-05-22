@@ -3,6 +3,7 @@ package com.example.hugo.custom_alert_view;
 /**
  * Created by hugo on 28/03/2015.
  */
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -25,7 +26,9 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-public class CustomAlertView extends RelativeLayout  {
+import com.example.hugo.custom_alert_view.Animations.AnimationFactory;
+
+public class CustomAlertView extends RelativeLayout {
 
     final String ALPHA = "#80000000";
     final String STOP_ALPHA = "#00000000";
@@ -38,127 +41,23 @@ public class CustomAlertView extends RelativeLayout  {
     private ViewSpecial mSpecialView;
     private boolean mIsHandledDispatchKey = true;
 
-    public CustomAlertView(Context context, int nbrButtons) {
+    public CustomAlertView(Context context) {
         super(context);
-        this.init(context, nbrButtons);
     }
 
     public CustomAlertView(Context context, int nbrButtons, String mainText,
-                     String[] tab, boolean autoAddToBackground) {
+                           String[] tab, boolean autoAddToBackground) {
         super(context);
         if (tab.length == nbrButtons) {
-            this.initFast(context, nbrButtons, mainText, tab, autoAddToBackground);
+            this.init(context, nbrButtons, mainText, tab, autoAddToBackground);
         } else {
             throw (new ExceptionInInitializerError(
                     "H.F : Le nombre de boutons ne correspond pas aux nombres de textBoutton !!"));
         }
     }
 
-    public CustomAlertView(Context context) {
-        super(context);
-    }
-
-    private void init(Context context, int nbrButtons) {
-        this.setVisibility(GONE);
-        mLinearLayout = new LinearLayout(context);
-        mLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        mLinearLayout.setBackgroundResource(R.drawable.alert_box);
-        int paddings = this.DpToPixel(context, 10);
-        mLinearLayout.setPadding(paddings, this.DpToPixel(context, 110),
-                paddings, paddings);
-        LayoutParams mLinearLayout_params = new LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        int PxMarginValue = this.DpToPixel(context, 16);
-        mLinearLayout_params.setMargins(PxMarginValue, 0, PxMarginValue, 0);
-        mLinearLayout_params.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-        if (nbrButtons > 3) {
-            this.nbrButtons = 3;
-            Log.w("Max 3 buttons", "Le nombre de boutons a été tronqué à 2");
-        } else {
-            this.nbrButtons = nbrButtons;
-        }
-
-        mTextView = new TextView(context);
-        TableLayout.LayoutParams mTextView_params = new TableLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-        mTextView_params.setMargins(this.DpToPixel(context, 20), 0,
-                this.DpToPixel(context, 20), this.DpToPixel(context, 5));
-
-        mTextView.setText("Désolé mais tu n'es pas connecté à internet");
-        mTextView.setGravity(Gravity.CENTER);
-        mTextView.setTextColor(Color.parseColor("#42B3CB"));
-        mTextView.setTextSize(17.0f);
-        mLinearLayout.addView(mTextView, mTextView_params);
-
-        LinearLayout buttonsContainer = new LinearLayout(context);
-        buttonsContainer.setOrientation(LinearLayout.HORIZONTAL);
-
-        LinearLayout.LayoutParams buttonsContainer_params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-
-        mLinearLayout.addView(buttonsContainer, buttonsContainer_params);
-
-//		for (int iButton = 0; iButton < this.nbrButtons; iButton++) {
-        for (int iButton = this.nbrButtons; iButton > 0; iButton--) {
-            Button cButton = new Button(context);
-            cButton.setTag(iButton-1);
-
-            cButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mClickListener != null) {
-                        mClickListener.onButtonClicked((Integer) v.getTag());
-                        Log.i("boutton cliqué",
-                                " " + (Integer) v.getTag());
-                    }
-                }
-            });
-
-            LinearLayout.LayoutParams cButton_params = new LinearLayout.LayoutParams(
-                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-
-            int topButtonMargin = DpToPixel(context, 10);
-            cButton_params.setMargins(0, topButtonMargin, 0, 0);
-            cButton.setBackgroundResource(R.drawable.orange_button);
-            cButton.setText("" + cButton.getTag());
-            cButton.setGravity(Gravity.CENTER);
-            cButton.setTextColor(Color.WHITE);
-
-            buttonsContainer.addView(cButton, cButton_params);
-
-            if ( iButton > 1 ) {
-                View view = new View(context);
-                view.setVisibility(View.INVISIBLE);
-
-                LinearLayout.LayoutParams invisibleView_params = new LinearLayout.LayoutParams(
-                        0, 0, 0.10f);
-
-                view.setLayoutParams(invisibleView_params);
-
-                buttonsContainer.addView(view);
-            }
-        }
-
-        RelativeLayout.LayoutParams rl_params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-
-        this.setLayoutParams(rl_params);
-
-        mSpecialView = new ViewSpecial(context);
-        LayoutParams special_params = new LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
-        this.addView(mSpecialView, special_params);
-        this.addView(mLinearLayout, mLinearLayout_params);
-
-    }
-
-    private void initFast( Context context, int nbrButtons, String mainText,
-                           String[] tab, boolean autoAddToBackground ) {
+    private void init(Context context, int nbrButtons, String mainText,
+                      String[] tab, boolean autoAddToBackground) {
 
 
         for (int i = 0; i < tab.length; i++) {
@@ -212,7 +111,7 @@ public class CustomAlertView extends RelativeLayout  {
         //for (int iButton = 0; iButton < this.nbrButtons; iButton++) {
         for (int iButton = this.nbrButtons; iButton > 0; iButton--) {
             Button cButton = new Button(context);
-            cButton.setTag(iButton-1);
+            cButton.setTag(iButton - 1);
 
             cButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -238,7 +137,7 @@ public class CustomAlertView extends RelativeLayout  {
             buttonsContainer.addView(cButton, cButton_params);
 
             //if (iButton < this.nbrButtons - 1) {
-            if ( iButton > 1 ) {
+            if (iButton > 1) {
                 View view = new View(context);
                 view.setVisibility(View.INVISIBLE);
 
@@ -264,7 +163,7 @@ public class CustomAlertView extends RelativeLayout  {
         this.addView(mSpecialView, special_params);
         this.addView(mLinearLayout, mLinearLayout_params);
 
-        if ( autoAddToBackground ) {
+        if (autoAddToBackground) {
             try {
                 ViewGroup vg = (ViewGroup) ((Activity) context).getWindow().getDecorView();
                 vg.addView(this);
@@ -279,13 +178,11 @@ public class CustomAlertView extends RelativeLayout  {
     }
 
 
-
     private int DpToPixel(Context context, int dpMarginValue) {
         float d = context.getResources().getDisplayMetrics().density;
         int sizeInPx = (int) ((dpMarginValue * d) + 0.5f);
         return sizeInPx;
     }
-
 
 
     public void setOnAlertViewClickListener(OnAlertViewClickListener OnAlertViewClickListener) {
@@ -297,19 +194,12 @@ public class CustomAlertView extends RelativeLayout  {
     }
 
     // montrer le pop-up
-    public void show(boolean isAnimated) {
+    public void show(String animationName) {
         this.setVisibility(VISIBLE);
         CustomAlertView.this.setBackgroundColor(Color.parseColor(ALPHA));
 
-        if (isAnimated) {
-            ScaleAnimation scale = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
-                    Animation.RELATIVE_TO_PARENT, 0.5f,
-                    Animation.RELATIVE_TO_PARENT, 1.1f);
-            scale.setInterpolator(new AccelerateInterpolator(1.2f));
-            scale.setDuration(300);
-
-            this.mLinearLayout.startAnimation(scale);
-        }
+        Animation animation = AnimationFactory.getAnimation(animationName);
+        this.mLinearLayout.startAnimation(animation);
     }
 
     // faire disparaitre le po-pup, Si isAnimated == true alors il disparaitra
@@ -427,10 +317,10 @@ public class CustomAlertView extends RelativeLayout  {
 //		  	Si mIsHandledDispatchKey = true alors on gère ici les actions
 //		 	note :: utiliser setDispatchKey(boolean)
 //			ici on gère le back Key
-        public  boolean  dispatchKeyEvent(KeyEvent event) {
+        public boolean dispatchKeyEvent(KeyEvent event) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
                 System.out.println("I'm a key pressed , moreover I'M BACK_KEY!!!");
-                if (CustomAlertView.this.getVisibility() == VISIBLE && CustomAlertView.this != null){
+                if (CustomAlertView.this.getVisibility() == VISIBLE && CustomAlertView.this != null) {
                     CustomAlertView.this.dismiss(true);
                 }
             }
@@ -439,7 +329,9 @@ public class CustomAlertView extends RelativeLayout  {
 
     }
 
-    /*********************** INTERFACE ****************************/
+    /**
+     * ******************** INTERFACE ***************************
+     */
     public interface OnAlertViewClickListener {
         public void onButtonClicked(int index);
     }
