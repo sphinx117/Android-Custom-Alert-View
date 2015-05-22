@@ -37,9 +37,15 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public void alertViewPop(View v){
+    public void test1(View v){
         final CustomAlertView av = new CustomAlertView(this, 1, "salut les kokinou je suis le super popup de la mort",
                 new String[] { "OK"}, true);
-        av.show(true);
+        av.show("default");
+    }
+
+    public void test2(View v){
+        final CustomAlertView av = new CustomAlertView(this, 1, "salut les kokinou je suis le super popup de la mort",
+                new String[] { "OK"}, true);
+        av.show("NONE");
     }
 }
