@@ -26,7 +26,10 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.example.hugo.custom_alert_view.Animations.AnimationFactory;
+import com.daimajia.easing.Glider;
+import com.daimajia.easing.Skill;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 public class CustomAlertView extends RelativeLayout {
 
@@ -198,8 +201,17 @@ public class CustomAlertView extends RelativeLayout {
         this.setVisibility(VISIBLE);
         CustomAlertView.this.setBackgroundColor(Color.parseColor(ALPHA));
 
-        Animation animation = AnimationFactory.getAnimation(animationName);
-        this.mLinearLayout.startAnimation(animation);
+//        Animation animation = AnimationFactory.getAnimation(animationName);
+//        this.mLinearLayout.startAnimation(animation);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(
+                Glider.glide(Skill.SineEaseIn, 4000, ObjectAnimator.ofFloat(mLinearLayout, "translationX", -300, 300))
+                );
+
+        set.setDuration(1200);
+        set.start();
+
     }
 
     // faire disparaitre le po-pup, Si isAnimated == true alors il disparaitra

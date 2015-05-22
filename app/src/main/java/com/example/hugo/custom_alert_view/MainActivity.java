@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
     public void test1(View v){
         final CustomAlertView av = new CustomAlertView(this, 1, "salut les kokinou je suis le super popup de la mort",
                 new String[] { "OK"}, true);
-        av.show("default");
+        av.show("IN_GrowingSlidingUp");
     }
 
     public void test2(View v){
